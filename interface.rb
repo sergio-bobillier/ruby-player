@@ -1,6 +1,8 @@
 # frozen_string_literal: true
 
-class CommandProcessor
+require 'io/console'
+
+class Interface
   def initialize(player)
     @player = player
     @page = 1
@@ -25,12 +27,11 @@ class CommandProcessor
     puts "\nCommands:\n"
     puts ' Z: Previous | X: Play   | C: Pause         | V: Stop      | B: Next'
     puts ' A: Add      | R: Remove | N: Previous Page | M: Next Page | Q: Quit'
-    print "\n >"
   end
 
   def prompt
     menu
-    STDIN.gets.chomp.downcase
+    STDIN.getch
   end
 
   def process_command(command)

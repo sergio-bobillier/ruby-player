@@ -4,7 +4,7 @@ require 'byebug'
 
 require_relative './errors/file_not_found_error'
 require_relative './argument_processor'
-require_relative './command_processor'
+require_relative './interface'
 require_relative './player'
 require_relative './playlist'
 
@@ -24,7 +24,7 @@ Thread.abort_on_exception = true
 
 player = Player.new(playlist)
 
-command_processor = CommandProcessor.new(player)
-command_processor.loop
+interface = Interface.new(player)
+interface.loop
 
 puts "\n -- Bye! --"
