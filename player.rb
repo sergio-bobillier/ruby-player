@@ -4,8 +4,8 @@ require 'English'
 
 # Represents the player. Fetches songs from the playlist / queue and plays them
 class Player
-  attr_reader :playlist
-  attr_accessor :playback_started_event, :next_song_event
+  attr_reader :playlist, :song
+  attr_accessor :playback_started_event, :next_song_event, :playback_error_event
 
   def initialize(playlist)
     @playlist = playlist
@@ -19,13 +19,17 @@ class Player
     return if playing?
 
     @song ||= playlist.next_song
-    puts "\n\nPlaying: #{@song.title}\n\n"
     start_playback
   end
 
   def play_next
     stop
     play_next!
+  end
+
+  def play_previous
+    stop
+    play_previous!
   end
 
   def stop
@@ -47,6 +51,11 @@ class Player
     play
   end
 
+  def play_previous!
+    @song = playlist.previous_song
+    play
+  end
+
   def start_playback
     @pid = Process.spawn('mpg321', @song.file.to_s, %i[out err] => '/dev/null')
     @stopped = false
@@ -56,11 +65,12 @@ class Player
       @pid = nil
 
       if $CHILD_STATUS.exited? && $CHILD_STATUS.exitstatus != 0
-        puts "ERROR: Could not play #{song.file}"
+        if @playback_error_event.is_a?(Proc)
+          @playback_error_event.call "ERROR: Could not play #{song.file.basename}"
+        end
       else
         unless $CHILD_STATUS.signaled?
           play_next!
-
           @next_song_event.call if @next_song_event.is_a?(Proc)
         end
       end

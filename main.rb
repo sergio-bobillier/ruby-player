@@ -9,7 +9,6 @@ require_relative './player'
 require_relative './playlist'
 
 playlist = Playlist.new
-playlist << '/home/sergio/Trash/Fatal Frame OST - Little Ghost Helping.mp3'
 
 if ARGV.any?
   begin
