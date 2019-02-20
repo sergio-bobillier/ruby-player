@@ -115,7 +115,11 @@ class Interface
     if error
       print error.colorize(color: :light_white, background: :red)
     elsif @player.playing?
-      print "Playing: #{@player.song.title} ♪♫ ".colorize(color: :light_green, background: :green)
+      if @player.paused?
+        print ' -- PAUSED --'.colorize(color: :light_yellow, background: :yellow)
+      else
+        print "Playing: #{@player.song.title} ♪♫ ".colorize(color: :light_green, background: :green)
+      end
     else
       print 'Ready'.colorize(color: :light_white, background: :blue)
     end
@@ -151,9 +155,14 @@ class Interface
   end
 
   def init_player_events
-    @player.playback_started_event = lambda do
+    redraw_interface = lambda do
       redraw
     end
+
+    @player.playback_started_event = redraw_interface
+    @player.playback_stoped_event = redraw_interface
+    @player.playback_paused_event = redraw_interface
+    @player.playback_resumed_event = redraw_interface
 
     @player.playback_error_event = lambda do |error|
       draw_status error

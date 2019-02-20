@@ -5,7 +5,9 @@ require 'English'
 # Represents the player. Fetches songs from the playlist / queue and plays them
 class Player
   attr_reader :playlist, :song
-  attr_accessor :playback_started_event, :next_song_event, :playback_error_event
+  attr_accessor :playback_started_event, :next_song_event,
+    :playback_error_event, :playback_stoped_event, :playback_paused_event,
+    :playback_resumed_event
 
   def initialize(playlist)
     @playlist = playlist
@@ -42,6 +44,8 @@ class Player
     Process.kill 'SIGTERM', @pid
     @waiter.join if @waiter
     @pid = nil
+
+    @playback_stoped_event.call if @playback_stoped_event.is_a?(Proc)
   end
 
   def pause
@@ -98,9 +102,13 @@ class Player
     if paused?
       Process.kill('SIGCONT', @pid)
       @paused = false
+
+      playback_resumed_event.call if playback_resumed_event.is_a?(Proc)
     else
       Process.kill('SIGSTOP', @pid)
       @paused = true
+
+      playback_paused_event.call if playback_paused_event.is_a?(Proc)
     end
   end
 end
