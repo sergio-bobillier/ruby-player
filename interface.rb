@@ -139,6 +139,8 @@ class Interface
       @player.play_previous
     when 'x'
       @player.play
+    when 'c'
+      @player.pause
     when 'v'
       @player.stop
     when 'b'
