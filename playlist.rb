@@ -37,4 +37,11 @@ class Playlist
     @current_song_index = @songs.size - 1 if @current_song_index < 0
     @songs[@current_song_index]
   end
+
+  def remove_item
+    return unless @current_song_index >= 0
+
+    @songs.delete_at(@current_song_index)
+    @current_song_index -= 1
+  end
 end

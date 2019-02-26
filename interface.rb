@@ -151,6 +151,10 @@ class Interface
       @player.stop
     when 'b'
       @player.play_next
+    when 'r'
+      playlist.remove_item
+      @player.play_next
+      redraw
     else
       draw_status "ERROR: Unknown command: #{command.upcase}"
     end
