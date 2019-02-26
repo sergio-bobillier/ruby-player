@@ -80,7 +80,9 @@ class Interface
       actual_index = index + offset
       song_number = (actual_index + 1).to_s.rjust(width, ' ')
 
-      song_title = "  #{song_number}. #{song.title}".ljust(80, ' ')
+      song_title = "#{song_number}. #{song.title}".ljust(78, ' ')
+
+      print ' '
 
       if actual_index == playlist.current_song_index
         print song_title.colorize(color: :light_white, background: :blue)
@@ -95,7 +97,7 @@ class Interface
 
     print CRLF
     print "Showing #{offset + 1} - #{offset + paged_songs.size}"\
-      " of #{playlist.songs.size}".rjust(80)
+      " of #{playlist.songs.size}".rjust(79)
     print CRLF
   end
 
