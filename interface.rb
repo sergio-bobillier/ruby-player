@@ -80,7 +80,7 @@ class Interface
       actual_index = index + offset
       song_number = (actual_index + 1).to_s.rjust(width, ' ')
 
-      song_title = "#{song_number}. #{song.title}".ljust(78, ' ')
+      song_title = format_song_title("#{song_number}. #{song.title}")
 
       print ' '
 
@@ -194,5 +194,13 @@ class Interface
 
   def calculate_width
     (playlist.size + 1).to_s.size
+  end
+
+  def format_song_title(song_title)
+    if song_title.length > 78
+      "#{song_title[0..74]}..."
+    else
+      song_title.ljust(78, ' ')
+    end
   end
 end
