@@ -75,6 +75,8 @@ class Player
   end
 
   def start_playback
+    return unless @song
+
     @pid = Process.spawn('mpg321', @song.file.to_s, %i[out err] => '/dev/null')
 
     waiter_proc = proc do |pid, song|
